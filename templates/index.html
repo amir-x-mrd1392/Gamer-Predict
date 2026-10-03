@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block content %}
+<h2>مسابقات</h2><div class="grid">
+{% for m in matches %}<section class="card">
+<div class="pill">{{ m.game }} · {{ m.title }}</div><h3>{{ m.team1 }} 🆚 {{ m.team2 }}</h3>
+{% if m.starts_at %}<p class="muted">زمان: {{ m.starts_at }}</p>{% endif %}
+{% if m.status == 'finished' %}<p>نتیجه نهایی: <b>{{ m.winner }}</b></p>
+{% elif m.my_choice %}<p>پیش‌بینی ثبت‌شده تو: <b>{{ m.my_choice }}</b></p>
+{% elif user %}<form method="post" action="{{ url_for('predict',match_id=m.id) }}">
+<select name="choice" required><option value="">انتخاب برنده</option><option>{{ m.team1 }}</option><option>{{ m.team2 }}</option></select>
+<button>ثبت پیش‌بینی</button></form>
+{% else %}<p><a href="{{ url_for('login') }}">برای پیش‌بینی وارد شو</a></p>{% endif %}
+</section>{% else %}<p>هنوز مسابقه‌ای ثبت نشده است.</p>{% endfor %}
+</div>{% endblock %}
