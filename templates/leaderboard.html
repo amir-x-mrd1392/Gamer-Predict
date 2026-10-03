@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block content %}<h2>🏆 جدول رتبه‌بندی</h2><section class="card"><table><tr><th>رتبه</th><th>گیمر</th><th>امتیاز</th><th>درست</th><th>کل پیش‌بینی</th></tr>
+{% for r in rows %}<tr><td>{{ loop.index }}</td><td><a href="{{ url_for('profile',user_id=r.id) }}">{{ r.username }}</a></td><td>{{ r.points }}</td><td>{{ r.correct or 0 }}</td><td>{{ r.total }}</td></tr>{% endfor %}</table></section>{% endblock %}
