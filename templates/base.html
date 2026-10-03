@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Forecast{% endblock %}</title>
+
+    <style>
+        :root {
+            color-scheme: dark;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #0c1020;
+            color: #f4f5ff;
+            font-family: Tahoma, Arial, sans-serif;
+            line-height: 1.8;
+        }
+
+        .wrap {
+            max-width: 1050px;
+            width: 100%;
+            margin: auto;
+            padding: 18px;
+        }
+
+        .top, .card {
+            background: #171d34;
+            border: 1px solid #293252;
+            border-radius: 16px;
+            padding: 18px;
+            margin: 14px 0;
+        }
+
+        .top {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        h1, h2 {
+            color: #aab8ff;
+        }
+
+        a {
+            color: #c6ceff;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        button, .btn {
+            background: #5865f2;
+            color: white;
+            border: 0;
+            border-radius: 9px;
+            padding: 10px 16px;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        button:hover, .btn:hover {
+            background: #4752c4;
+        }
+
+        input, select, textarea {
+            background: #0e1428;
+            color: white;
+            border: 1px solid #3a456d;
+            border-radius: 8px;
+            padding: 10px;
+            max-width: 100%;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        form {
+            margin: 8px 0;
+        }
+
+        .flash {
+            background: #27375a;
+            padding: 10px;
+            border-radius: 9px;
+            margin: 8px 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+        }
+
+        small, .muted {
+            color: #b5bdd9;
+        }
+
+        .pill {
+            font-size: .85em;
+            color: #c8d1ff;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            padding: 9px;
+            border-bottom: 1px solid #303957;
+            text-align: right;
+        }
+
+        img, video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* گوشی */
+        @media (max-width: 600px) {
+            .wrap {
+                padding: 10px;
+            }
+
+            .top {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 12px;
+            }
+
+            .top h1 {
+                font-size: 22px;
+                text-align: center;
+                margin: 0;
+            }
+
+            .top > div {
+                text-align: center;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+            }
+
+            nav > a,
+            nav > form,
+            nav > form button {
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+
+            nav > form {
+                margin: 0;
+            }
+
+            nav a,
+            nav button {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 12px;
+                margin: 10px 0;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            button, .btn {
+                min-height: 42px;
+            }
+
+            table {
+                font-size: 13px;
+                min-width: 450px;
+            }
+
+            input, select, textarea {
+                font-size: 16px;
+            }
+
+            footer {
+                font-size: 12px;
+            }
+        }
+
+        /* تبلت */
+        @media (min-width: 601px) and (max-width: 900px) {
+            .wrap {
+                padding: 14px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header class="top">
+            <div>
+                <h1>🎮 Forecast</h1>
+                <div class="muted">پیش‌بینی رایگان مسابقات گیمینگ</div>
+            </div>
+
+            <nav>
+                <a href="{{ url_for('index') }}">مسابقات</a>
+                <a href="{{ url_for('leaderboard') }}">رتبه‌بندی</a>
+
+                {% if user %}
+                    <a href="{{ url_for('profile', user_id=user.id) }}">
+                        پروفایل من
+                    </a>
+
+                    {% if user.is_admin %}
+                        <a href="{{ url_for('admin') }}">مدیریت</a>
+                    {% endif %}
+
+                    <form method="post" action="{{ url_for('logout') }}">
+                        <button type="submit">خروج</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('login') }}">ورود</a>
+                    <a href="{{ url_for('register') }}">ثبت‌نام</a>
+                {% endif %}
+            </nav>
+        </header>
+
+        {% for msg in get_flashed_messages() %}
+            <div class="flash">{{ msg }}</div>
+        {% endfor %}
+
+        {% block content %}{% endblock %}
+
+        <footer class="muted" style="padding:18px;text-align:center">
+            فقط امتیاز مجازی؛ بدون پول، جایزه نقدی یا شرط‌بندی.
+        </footer>
+    </div>
+</body>
+</html>
