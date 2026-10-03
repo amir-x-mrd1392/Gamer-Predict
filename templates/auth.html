@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block content %}<section class="card" style="max-width:480px;margin:30px auto">
+<h2>{{ title }}</h2><form method="post"><p><input name="username" placeholder="نام کاربری" minlength="3" maxlength="24" required></p>
+<p><input type="password" name="password" placeholder="رمز عبور (حداقل ۱۰ نویسه)" minlength="10" required></p>
+<button>{{ title }}</button></form></section>{% endblock %}
