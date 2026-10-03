@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block content %}<h2>🔐 پنل مدیریت</h2>
+<section class="card"><h3>افزودن مسابقه</h3><form method="post" action="{{ url_for('add_match') }}" class="grid">
+<input name="game" placeholder="بازی (مثلاً Call of Duty)" required>
+<input name="title" placeholder="عنوان مسابقه/مرحله" required>
+<input name="team1" placeholder="تیم اول" required><input name="team2" placeholder="تیم دوم" required>
+<input name="starts_at" placeholder="زمان مسابقه (اختیاری)">
+<button>افزودن مسابقه</button></form></section>
+<h3>مدیریت نتایج</h3>{% for m in matches %}<section class="card"><b>{{ m.game }} — {{ m.title }}</b><p>{{ m.team1 }} 🆚 {{ m.team2 }} · وضعیت: {{ m.status }}</p>
+{% if m.status=='open' %}<form method="post" action="{{ url_for('finish_match',match_id=m.id) }}">
+<select name="winner" required><option value="">انتخاب برنده نهایی</option><option>{{ m.team1 }}</option><option>{{ m.team2 }}</option></select><button>ثبت نتیجه</button></form>
+{% else %}<p>برنده: {{ m.winner }}</p><form method="post" action="{{ url_for('reopen_match',match_id=m.id) }}"><button>بازگشایی مسابقه</button></form>{% endif %}</section>{% endfor %}
+<section class="card"><h3>کاربران ثبت‌نام‌شده</h3>{% for u in users %}<p><a href="{{ url_for('profile',user_id=u.id) }}">{{ u.username }}</a> {% if u.is_admin %}· مدیر{% endif %}</p>{% endfor %}</section>
+{% endblock %}
