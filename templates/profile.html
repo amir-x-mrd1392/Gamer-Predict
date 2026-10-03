@@ -1,0 +1,3 @@
+{% extends "base.html" %}{% block content %}<section class="card"><h2>پروفایل {{ person.username }}</h2><h3>{{ points }} امتیاز</h3></section>
+<h2>تاریخچه پیش‌بینی‌ها</h2>{% for h in history %}<section class="card"><b>{{ h.game }} — {{ h.title }}</b><p>{{ h.team1 }} 🆚 {{ h.team2 }}</p>
+<p>انتخاب: {{ h.choice }} · {% if h.status=='finished' %}برنده: {{ h.winner }}{% else %}در انتظار نتیجه{% endif %}</p></section>{% else %}<p>هنوز پیش‌بینی‌ای ثبت نشده.</p>{% endfor %}{% endblock %}
